@@ -1,0 +1,23 @@
+Important:
+
+When making changes, create separate folders for your features.
+
+Name the folder according to its purpose.
+
+Include relevant files like HTML, CSS, and JS.
+
+Link them to the main project as needed.
+
+Do not modify careerPathVisualizer.js or chatbot.js.
+
+
+
+Usage Notes:
+
+Use your own Google AI Studio API.
+
+If you see “I'm sorry, I encountered an issue...” it likely means token limit reached for the day, use API of another google account.
+
+Type “career path” to have the chatbot generate a career path.
+
+Use the Restart QnA button (right side) to start a new QnA session.

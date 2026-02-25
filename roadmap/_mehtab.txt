@@ -1,0 +1,125 @@
+// ===== Career Roadmap Generator (Starting from Higher Secondary in India) =====
+
+async function generateCareerRoadmap(field) {
+  const prompt = `
+Provide a structured career roadmap for someone pursuing a career in ${field} in India,
+starting from higher secondary school (11th and 12th grade). Include key steps such as:
+- Choosing relevant subjects in 11th/12th
+- Preparing for entrance exams (if any)
+- Undergraduate and postgraduate studies
+- Skill development, internships, certifications
+- Early career roles leading to the desired career
+
+Return JSON like:
+{
+  "field": "${field}",
+  "steps": [
+    {
+      "title": "Step 1: Higher Secondary",
+      "year": "11th-12th Grade",
+      "description": "Choose relevant subjects and start foundational learning",
+      "milestones": ["Select relevant subjects", "Build basic skills", "Start career awareness"]
+    }
+  ]
+}
+  `;
+
+  try {
+    const response = await fetchWithRetry(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.7
+        }
+      })
+    });
+
+    const data = await response.json();
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+
+    // Clean potential markdown wrappers
+    const cleanJson = rawText.replace(/```json\n|```\n|```/g, "").trim();
+    const roadmapData = safeJsonParse(cleanJson);
+
+    displayCareerRoadmap(roadmapData);
+
+  } catch (err) {
+    console.error("❌ Roadmap error:", err);
+    document.getElementById("roadmap-content").innerHTML =
+      `<p>⚠️ Couldn't fetch roadmap. Please try again later.</p>`;
+  }
+}
+
+// ===== Display Roadmap in roadmap-content div =====
+function displayCareerRoadmap(roadmapData) {
+  const container = document.getElementById("roadmap-content");
+
+  if (!roadmapData || !roadmapData.steps) {
+    container.innerHTML = `
+      <div class="roadmap-empty">
+        <div class="empty-icon">🛤️</div>
+        <p>No roadmap available for this career path yet.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="roadmap-line"></div>
+    ${roadmapData.steps.map(step => `
+      <div class="roadmap-step">
+        <div class="timeline-marker"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="milestone">
+          <div class="milestone-header">
+            <h3 class="milestone-title">${step.title}</h3>
+            <span class="milestone-year">${step.year || ""}</span>
+          </div>
+          <p class="milestone-content">${step.description || ""}</p>
+          <ul class="milestone-list">
+            ${step.milestones?.map(m => `<li><i class="fas fa-check-circle"></i>${m}</li>`).join("") || ""}
+          </ul>
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+// ===== Safe JSON parser =====
+function safeJsonParse(text) {
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    console.warn("⚠️ JSON parse failed, fixing...", err);
+
+    let fixed = text
+      .replace(/,\s*]/g, "]")
+      .replace(/,\s*}/g, "}");
+
+    try {
+      return JSON.parse(fixed);
+    } catch (err2) {
+      console.error("❌ Still couldn't parse JSON:", err2);
+      return null;
+    }
+  }
+}
+
+// ===== Hook into career guidance flow =====
+(function() {
+  const originalFn = generateCareerPathFromGuidance;
+
+  generateCareerPathFromGuidance = function(guidanceText) {
+    // Run original guidance
+    originalFn(guidanceText);
+
+    // Generate roadmap for the chosen career starting from higher secondary
+    if (typeof generateCareerRoadmap === "function" && currentCareerField) {
+      setTimeout(() => {
+        generateCareerRoadmap(currentCareerField);
+      }, 1200);
+    }
+  };
+})();

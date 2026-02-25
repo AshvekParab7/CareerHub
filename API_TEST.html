@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px 5px; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f5f5f5; white-space: pre-wrap; }
+        .success { border-color: green; background: #e8f5e9; }
+        .error { border-color: red; background: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>Gemini API Test</h1>
+    <p>Click the button below to test if the Gemini API is working:</p>
+    <button onclick="testAPI()">Test API Connection</button>
+    <div id="result"></div>
+
+    <script>
+        const API_KEY = "AIzaSyCm_e7MVEwJxM6KrrXp-q5RtAgCj12YKbk";
+        const MODEL = "gemini-1.5-flash-002";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing API...';
+            resultDiv.className = '';
+
+            try {
+                console.log("Testing API:", API_URL);
+
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: "Say hello in one word"
+                            }]
+                        }],
+                        generationConfig: { temperature: 0.7 }
+                    })
+                });
+
+                console.log("Response status:", response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API returned ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log("Response data:", data);
+
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+
+                resultDiv.className = 'success';
+                resultDiv.textContent = `✅ SUCCESS!\n\nAPI is working correctly.\n\nResponse: ${text}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+
+            } catch (error) {
+                console.error("API Test Error:", error);
+                resultDiv.className = 'error';
+                resultDiv.textContent = `❌ ERROR!\n\n${error.message}\n\nCheck browser console for more details.`;
+            }
+        }
+    </script>
+</body>
+</html>

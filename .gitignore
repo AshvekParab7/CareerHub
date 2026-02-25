@@ -1,0 +1,7 @@
+tmpclaude-*
+.vscode/
+*.zip
+*.log
+node_modules/
+dist/
+.DS_Store

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Guidance Assistant</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="stylesheet" href="studyMaterial/studyMaterial.css" />
+
+</head>
+<body>
+  <div class="app-container">
+    <!-- Mobile Header with Hamburger Menu -->
+    <div class="mobile-header">
+      <button id="mobile-menu-toggle" class="hamburger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <h2>Career Guidance</h2>
+      <div class="mobile-spacer"></div>
+    </div>
+
+    <!-- Left Navigation Bar (15% width) -->
+    <nav id="left-nav" class="left-nav">
+      <div class="nav-header">
+        <h3>Career Hub</h3>
+      </div>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-section="dashboard">
+            <span class="nav-icon">🏠</span>Dashboard
+          </a></li>
+          <li><a href="#" class="nav-link" data-section="study-material">
+            <span class="nav-icon">📚</span>Study Material
+          </a></li>
+          <li><a href="#" class="nav-link" data-section="career-qna">
+            <span class="nav-icon">💬</span>Career Q&A
+          </a></li>
+          <li><a href="#" class="nav-link" data-section="resume-builder">
+            <span class="nav-icon">📄</span>Resume Builder
+          </a></li>
+          <li><a href="#" class="nav-link" data-section="mentorship">
+            <span class="nav-icon">👥</span>Mentorship
+          </a></li>
+          <li><a href="#" class="nav-link" data-section="settings">
+            <span class="nav-icon">⚙️</span>Settings
+          </a></li>
+
+          <!-- indicator -->
+          <div class="nav-indicator"></div>
+        </ul>
+    </nav>
+
+    <!-- Chat Area (55% width) -->
+    <div id="chat-area" class="chat-area">
+      <div class="chat-header">
+        <h2>Career Guidance Assistant</h2>
+      </div>
+
+      <div id="chat-box" class="chat-box">
+        <!-- Chat messages will appear here -->
+      </div>
+
+    <div class="options-wrapper">
+      <div id="options-container" class="options-container">
+        <!-- Option bubbles will appear here -->
+      </div>
+      <button id="restart-qna-btn" class="restart-qna-bubble" title="Restart Q&A">Restart Q&A</button>
+    </div>
+
+      <div class="input-area">
+        <input type="text" id="user-input" class="user-input" placeholder="Type your message..." />
+        <button id="send-btn" class="send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Study Material (55% width) -->
+    <div id="study-material-section" class="study-material-section" style="display:none;">
+      <div class="study-header">
+        <h2>Study Material</h2>
+      </div>
+
+      <!-- Input for career field -->
+      <div class="input-area">
+        <input type="text" id="study-input" class="user-input" placeholder="Enter career field (e.g., Data Science)" />
+        <button id="study-generate-btn" class="send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="study-content" class="study-content">
+        <div class="study-empty">
+          <div class="empty-icon">📚</div>
+          <p>Enter a career field above to generate structured study resources.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Career Path Sidebar (30% width, always visible with selection menu) -->
+    <aside id="career-sidebar" class="career-sidebar">
+      <div class="sidebar-header">
+        <div class="career-view-selector">
+          <button id="career-path-tab" class="career-tab active" data-view="path">
+            <span class="tab-icon">📝</span>Career Options
+          </button>
+          <button id="summary-tab" class="career-tab" data-view="summary">
+            <span class="tab-icon">📋</span>Summary
+          </button>
+          <div class="tab-indicator"></div>
+        </div>
+      </div>
+      <div id="career-content" class="career-content">
+        <div class="career-placeholder">
+          <div class="placeholder-icon">📝</div>
+          <p>Complete the career assessment to see your personalized path</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Career Path (inline below chat on mobile) -->
+    <div id="mobile-career-section" class="mobile-career-section">
+      <div class="mobile-career-header">
+        <div class="career-view-selector mobile">
+          <button id="mobile-career-path-tab" class="career-tab active" data-view="path">
+            <span class="tab-icon">📝</span>Career Options
+          </button>
+          <button id="mobile-summary-tab" class="career-tab" data-view="summary">
+            <span class="tab-icon">📋</span>Summary
+          </button>
+        </div>
+      </div>
+      <div id="mobile-career-content" class="mobile-career-content">
+        <!-- Career content for mobile will appear here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="chatbot.js"></script>
+  <script src="careerPathVisualizer.js"></script>
+  <script src="navigation.js"></script>
+
+  <script src="studyMaterial/studyMaterial.js"></script>
+</body>
+</html>

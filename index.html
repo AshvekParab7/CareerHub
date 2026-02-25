@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Guidance Assistant</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="studyMaterial/studyMaterial.css" />
+  <link rel="stylesheet" href="roadmap/roadmap.css" />
+  <link rel="stylesheet" href="resumeBuilder/resumeBuilder.css" />
+  <!-- Font Awesome for roadmap icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button id="mobile-menu-toggle" class="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+      <h2>Career Guidance</h2>
+      <div class="mobile-spacer"></div>
+    </div>
+
+    <!-- Left Navigation -->
+<nav id="left-nav" class="left-nav">
+  <div class="nav-header"><h3>Career Hub</h3></div>
+  <ul class="nav-links">
+    <li><a href="#" class="nav-link active" data-section="dashboard"><span class="nav-icon">🏠</span>Dashboard</a></li>
+    <li><a href="#" class="nav-link" data-section="study-material"><span class="nav-icon">📚</span>Study Material</a></li>
+    <li><a href="#" class="nav-link" data-section="career-roadmap">
+            <span class="nav-icon">🗺️</span>Career Roadmap
+          </a></li>
+    <li><a href="#" class="nav-link" data-section="resume-builder"><span class="nav-icon">📄</span>Resume Builder</a></li>
+   
+    <li><a href="#" id="clear-chat-btn" class="nav-link"><span class="nav-icon">🗑️</span>Clear Chat</a></li>
+
+    <!-- keep indicator here so it works with highlight -->
+    <div class="nav-indicator"></div>
+
+    <!-- Profile moved to bottom -->
+    <li class="nav-profile" style="margin-top: auto;">
+      <a href="#" id="profile-link" class="nav-link">
+        <span class="nav-icon">👤</span>Profile
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
+    <!-- Chat Area -->
+    <div id="chat-area" class="chat-area">
+      <div class="chat-header"><h2>Career Guidance Assistant</h2></div>
+      <div id="chat-box" class="chat-box"></div>
+
+      <div class="options-wrapper">
+        <div id="options-container" class="options-container"></div>
+        <button id="restart-qna-btn" class="restart-qna-bubble" title="Restart Q&A">Restart Q&A</button>
+      </div>
+
+      <div class="input-area">
+        <input type="text" id="user-input" class="user-input" placeholder="Type your message..." />
+        <button id="send-btn" class="send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Study Material Section -->
+<div id="study-material-section" class="study-material-section" style="display:none;">
+      <div class="study-header">
+        <h2>Study Material</h2>
+      </div>
+
+      <!-- Input for career field -->
+      <div class="input-area">
+        <input type="text" id="study-input" class="user-input" placeholder="Enter career field (e.g., Data Science)" />
+        <button id="study-generate-btn" class="send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Dynamic filters will appear here -->
+<div id="study-filters" class="study-filters"></div>
+
+      <div id="study-content" class="study-content">
+        <div class="study-empty">
+          <div class="empty-icon">📚</div>
+          <p>Enter a career field above to generate structured study resources.</p>
+        </div>
+      </div>
+    </div>
+     <!-- Career Roadmap Section (55% width) -->
+<div id="career-roadmap-section" class="career-roadmap-section" style="display:none;">
+    <div class="roadmap-header">
+        <h2>🗺️ Career Roadmap</h2>
+        <div class="roadmap-header-meta">
+          <span id="roadmap-current-title"></span>
+        </div>
+    </div>
+
+    <div id="roadmap-content" class="roadmap-content">
+        <div class="roadmap-empty">
+            <div class="empty-icon">🗺️</div>
+            <p>Complete the career assessment to see your personalized roadmap.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar for roadmap suggestions -->
+<aside id="sidebar-suggestions" class="sidebar-suggestions" style="display:none;">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <h3>Explore Other Roadmaps</h3>
+    <button id="edit-toggle" class="edit-btn">✎</button>
+  </div>
+  
+
+  <!-- Scrollable Content (Suggestion Cards) -->
+    <div class="sidebar-content">
+  <div class="sidebar-empty" id="sidebar-empty">
+    <div class="empty-icon">🗂️</div>
+    <p>No suggestions available. Complete the career assessment to explore more roadmaps.</p>
+  </div>
+
+  <div class="suggestion-cards" id="suggestion-cards"></div>
+</div>
+
+  <!-- Search Bar (Sticky at Bottom) -->
+  <div class="input-area sidebar-search">
+    <input type="text" id="roadmap-search" class="user-input" placeholder="Search career paths..." />
+    <button id="roadmap-search-btn" class="send-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+    <!-- Career Sidebar -->
+    <aside id="career-sidebar" class="career-sidebar">
+  <div class="sidebar-header">
+    <div class="career-view-selector">
+      <button id="career-path-tab" class="career-tab active" data-view="path">
+        <span class="tab-icon">📝</span>Career Options
+      </button>
+      <button id="summary-tab" class="career-tab" data-view="summary">
+        <span class="tab-icon">📋</span>Summary
+      </button>
+      <div class="tab-indicator"></div>
+    </div>
+
+    <!-- ✅ ADD EDIT BUTTON HERE -->
+    <button id="edit-summary-btn" class="edit-btn" title="Edit Summaries"><img src="pencil-simple (1).png"></button>
+  </div>
+
+  <div id="career-content" class="career-content">
+    <div class="career-placeholder">
+      <div class="placeholder-icon">📝</div>
+      <p>Complete the career assessment to see your personalized path</p>
+    </div>
+  </div>
+</aside>
+
+<aside id="subjects-wrapper" style="display:none;">
+    <div class="sidebar-header">
+      <h3>Subjects & Topics</h3>
+    </div>
+    <div id="subjects-content" class="subjects-content">
+      <div class="study-empty">
+        <div class="empty-icon-2">📘</div>
+        <p>Enter a career field to load subjects & topics</p>
+      </div>
+    </div>
+</aside>
+
+
+    <!-- Resume Builder Section -->
+<div id="resume-builder-section" class="resume-builder-section" style="display:none;">
+
+  <!-- Top Bar -->
+  <div class="resume-topbar">
+    <h2>📄 Resume Builder</h2>
+    <div class="resume-score-bar">
+      <span class="score-label">Score</span>
+      <div class="score-track"><div class="score-fill" id="score-fill" style="width:0%"></div></div>
+      <span class="score-value" id="score-value">0%</span>
+    </div>
+    <div class="resume-topbar-actions">
+      <button class="rb-btn rb-btn-secondary" id="rb-save-btn"><span>💾</span> Save</button>
+      <button class="rb-btn rb-btn-success" id="rb-download-btn"><span>⬇</span> Download PDF</button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="resume-builder-body">
+
+    <!-- Left: Form -->
+    <div class="resume-form-panel">
+
+      <!-- Tab Bar -->
+      <div class="resume-form-tabs">
+        <button class="form-tab active" data-tab="personal">Personal</button>
+        <button class="form-tab" data-tab="experience">Experience</button>
+        <button class="form-tab" data-tab="education">Education</button>
+        <button class="form-tab" data-tab="skills">Skills</button>
+        <button class="form-tab" data-tab="projects">Projects</button>
+        <button class="form-tab" data-tab="certifications">Certs</button>
+      </div>
+
+      <!-- Form Content -->
+      <div class="resume-form-content">
+
+        <!-- Personal Info -->
+        <div class="form-pane active" id="pane-personal">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="personal-name" placeholder="Arjun Sharma" oninput="syncAndPreview()">
+            </div>
+            <div class="form-group">
+              <label>Job Title / Role</label>
+              <input type="text" id="personal-title" placeholder="Full Stack Developer" oninput="syncAndPreview()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="personal-email" placeholder="arjun@email.com" oninput="syncAndPreview()">
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="text" id="personal-phone" placeholder="+91 98765 43210" oninput="syncAndPreview()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="personal-location" placeholder="Bengaluru, India" oninput="syncAndPreview()">
+            </div>
+            <div class="form-group">
+              <label>LinkedIn</label>
+              <input type="text" id="personal-linkedin" placeholder="linkedin.com/in/arjun" oninput="syncAndPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Portfolio / Website</label>
+            <input type="text" id="personal-portfolio" placeholder="arjun.dev" oninput="syncAndPreview()">
+          </div>
+          <div class="form-group">
+            <div class="ai-row">
+              <button class="ai-enhance-btn" id="ai-summary-btn" onclick="aiGenerateSummary()">
+                <span class="ai-icon">✦</span> AI Write Summary
+              </button>
+            </div>
+            <label>Professional Summary</label>
+            <textarea id="personal-summary" placeholder="Motivated software engineer with 3+ years of experience..." rows="5" oninput="syncAndPreview()"></textarea>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="form-pane" id="pane-experience">
+          <div id="experience-list"></div>
+          <button class="add-item-btn" onclick="addExperience()">+ Add Experience</button>
+        </div>
+
+        <!-- Education -->
+        <div class="form-pane" id="pane-education">
+          <div id="education-list"></div>
+          <button class="add-item-btn" onclick="addEducation()">+ Add Education</button>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-pane" id="pane-skills">
+          <div class="form-group">
+            <label>Add a Skill</label>
+            <div class="skill-input-row">
+              <input type="text" id="skill-input" placeholder="e.g. React, Python, Figma">
+              <button id="skill-add-btn">Add</button>
+            </div>
+          </div>
+          <div id="skills-list-display" class="skills-list"></div>
+        </div>
+
+        <!-- Projects -->
+        <div class="form-pane" id="pane-projects">
+          <div id="projects-list"></div>
+          <button class="add-item-btn" onclick="addProject()">+ Add Project</button>
+        </div>
+
+        <!-- Certifications -->
+        <div class="form-pane" id="pane-certifications">
+          <div id="certifications-list"></div>
+          <button class="add-item-btn" onclick="addCertification()">+ Add Certification</button>
+        </div>
+
+      </div>
+    </div><!-- / form panel -->
+
+    <!-- Right: Live Preview -->
+    <div class="resume-preview-panel">
+      <div class="preview-toolbar">
+        <span>Live Preview</span>
+        <div class="template-switcher">
+          <button class="tpl-btn active" data-tpl="tpl-modern">Modern</button>
+          <button class="tpl-btn" data-tpl="tpl-classic">Classic</button>
+          <button class="tpl-btn" data-tpl="tpl-minimal">Minimal</button>
+        </div>
+      </div>
+      <div class="resume-preview-scroll">
+        <div id="resume-paper" class="tpl-modern">
+          <p class="rp-placeholder-msg">Fill in the form on the left to see your live resume preview here ✦</p>
+        </div>
+      </div>
+    </div><!-- / preview panel -->
+
+  </div><!-- / body -->
+</div><!-- / resume-builder-section -->
+
+    <!-- Mobile Career Section -->
+    <div id="mobile-career-section" class="mobile-career-section">
+      <div class="mobile-career-header">
+        <div class="career-view-selector mobile">
+          <button id="mobile-career-path-tab" class="career-tab active" data-view="path">
+            <span class="tab-icon">📝</span>Career Options
+          </button>
+          <button id="mobile-summary-tab" class="career-tab" data-view="summary">
+            <span class="tab-icon">📋</span>Summary
+          </button>
+        </div>
+      </div>
+      
+      <div id="mobile-career-content" class="mobile-career-content"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <!-- Scripts -->
+  <script src="chatbot.js"></script>
+  <script src="roadmap/roadmap.js"></script>
+  <script src="careerPathVisualizer.js"></script>
+  <script src="navigation.js"></script>
+  <script src="studyMaterial/studyMaterial.js"></script>
+  <script src="chat-storage/chat_storage.js"> </script>
+  <script src="resumeBuilder/resumeBuilder.js"></script>
+  <!-- Profile Modal -->
+<div id="profile-modal" class="profile-modal" style="display: none;">
+  <div class="profile-modal-content">
+    <!-- Left Menu -->
+    <div class="profile-modal-menu">
+      <button class="active" data-tab="profile">Profile</button>
+      <button data-tab="clear-chat">Clear Chat</button>
+      <button data-tab="logout">Logout</button>
+      <button data-tab="theme">Change Theme</button>
+    </div>
+
+    <!-- Right Content -->
+    <div class="profile-modal-main" id="profile-modal-main">
+      <span class="close-profile">&times;</span>
+      <!-- Profile info will load here dynamically -->
+    </div>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById('profile-modal');
+const modalMain = document.getElementById('profile-modal-main');
+const menuButtons = document.querySelectorAll('.profile-modal-menu button');
+
+menuButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    menuButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const tab = btn.dataset.tab;
+
+    if (tab === 'profile') {
+      // load profile content
+      fetch('auth/profile.html')
+        .then(res => res.text())
+        .then(html => {
+          modalMain.innerHTML = `<span class="close-profile">&times;</span>` + html;
+          const closeBtn = modalMain.querySelector('.close-profile');
+          
+          closeBtn.onclick = () => modal.style.display = 'none';
+
+          // Hide the back button when modal opens
+      const backBtn = modalMain.querySelector('.back-btn');
+      if (backBtn) backBtn.style.display = 'none';
+
+          // ===== Firebase logic to load & save profile data =====
+          const auth = firebase.auth();
+          const db = firebase.firestore();
+
+          auth.onAuthStateChanged(user => {
+            if (!user) return;
+
+            const userDoc = db.collection("users").doc(user.uid);
+
+            // Load existing data into inputs
+            userDoc.get().then(doc => {
+              if (doc.exists) {
+                const data = doc.data();
+                if (data.displayName) modalMain.querySelector('#displayName').value = data.displayName;
+                if (data.school) modalMain.querySelector('#school').value = data.school;
+                if (data.stream) modalMain.querySelector('#stream').value = data.stream;
+                if (data.birthdate) {
+                  modalMain.querySelector('#birthdate').value = data.birthdate;
+                  const age = calculateAge(data.birthdate);
+                  modalMain.querySelector('#age').textContent = age;
+                }
+                if (data.favSubjects) modalMain.querySelector('#favSubjects').value = data.favSubjects;
+                if (data.interests) modalMain.querySelector('#interests').value = data.interests;
+              }
+            });
+
+            // Age calculation
+            const birthInput = modalMain.querySelector('#birthdate');
+            const ageDisplay = modalMain.querySelector('#age');
+            function calculateAge(birthdate) {
+              if (!birthdate) return "--";
+              const birth = new Date(birthdate);
+              const today = new Date();
+              let age = today.getFullYear() - birth.getFullYear();
+              const monthDiff = today.getMonth() - birth.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
+              return age;
+            }
+            birthInput.addEventListener('change', () => {
+              ageDisplay.textContent = calculateAge(birthInput.value);
+            });
+
+            // Save form
+            const profileForm = modalMain.querySelector('#profileForm');
+            profileForm.addEventListener('submit', e => {
+              e.preventDefault();
+              const formData = {
+                displayName: modalMain.querySelector('#displayName').value,
+                school: modalMain.querySelector('#school').value,
+                stream: modalMain.querySelector('#stream').value,
+                birthdate: modalMain.querySelector('#birthdate').value,
+                favSubjects: modalMain.querySelector('#favSubjects').value,
+                interests: modalMain.querySelector('#interests').value
+              };
+              userDoc.set(formData, { merge: true })
+                .then(() => alert('Profile saved!'))
+                .catch(err => console.error(err));
+            });
+          });
+        });
+    } 
+    else if (tab === 'clear-chat') {
+      modalMain.innerHTML = `<p>Click the button to clear chat:</p><button id="clear-chat-btn-modal">Clear Chat</button>`;
+      document.getElementById('clear-chat-btn-modal').onclick = () => {
+        document.getElementById('chat-box').innerHTML = '';
+        if (typeof initializeChat === 'function') {
+          initializeChat();
+        }
+        alert('Chat cleared!');
+      };
+    } 
+    else if (tab === 'logout') {
+      modalMain.innerHTML = `<p>Click to logout:</p><button id="logout-btn-modal">Logout</button>`;
+      document.getElementById('logout-btn-modal').onclick = () => {
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'auth/login.html';
+        });
+      };
+    } 
+    else if (tab === 'theme') {
+      modalMain.innerHTML = `<p>Toggle theme:</p><button id="theme-toggle-btn">Change Theme</button>`;
+      document.getElementById('theme-toggle-btn').onclick = () => {
+        const root = document.documentElement;
+        if (root.getAttribute('data-theme') === 'light') {
+          root.removeAttribute('data-theme');
+          document.getElementById('theme-toggle-btn').textContent = 'Switch to Light Theme';
+        } else {
+          root.setAttribute('data-theme', 'light');
+          document.getElementById('theme-toggle-btn').textContent = 'Switch to Dark Theme';
+        }
+      };
+    }
+  });
+});
+
+// Open modal when sidebar profile is clicked
+const profileLink = document.getElementById('profile-link');
+profileLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  modal.style.display = 'flex';
+  menuButtons[0].click(); // trigger first tab
+});
+
+
+// Clear Chat is handled directly by chat_storage.js (no modal needed)
+
+window.addEventListener('DOMContentLoaded', () => {
+  modal.style.display = 'none';
+});
+
+// Close modal when clicking outside content
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+
+    // Optional: reset first tab as active
+    menuButtons.forEach(b => b.classList.remove('active'));
+    menuButtons[0].classList.add('active');
+
+    // Optional: clear modal content (or keep last profile data)
+    // modalMain.innerHTML = '';
+  }
+});
+
+</script>
+
+
+</body>
+</html>

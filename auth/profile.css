@@ -1,0 +1,202 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== Body ===== */
+body {
+    background: #0f172a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Profile Container ===== */
+.profile-container {
+    width: 100%;
+    max-width: 520px;
+}
+
+/* ===== Card ===== */
+.profile-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    animation: slideIn 0.5s ease forwards;
+}
+
+.profile-card h2 {
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+/* Form Elements */
+label {
+    display: block;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 0;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: #f1f5f9;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary, .save-btn {
+    width: 100%;
+    padding: 14px;
+    background: #3b82f6;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.btn-primary:hover, .save-btn:hover {
+    background: #2563eb;
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    top: 35px;
+    left: 40px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #94a3b8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background: #1e293b;
+    border-color: #475569;
+    color: #fff;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ===== Birthdate + Age Row ===== */
+.birth-age-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.birth-field, .age-field {
+    width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styling for labels */
+.profile-card label, .age-label {
+    display: block;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 0;
+}
+
+/* Input Fields */
+.profile-card input {
+    margin-bottom: 0;
+    height: 46px; 
+    border-color: #334155;
+    background: #0f172a;
+    font-size: 15px;
+}
+
+/* Age Box */
+.age-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px; 
+  padding: 0 12px;
+  background-color: #1e293b; /* Slightly lighter than input */
+  color: #f1f5f9;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ===== Error Messages ===== */
+.auth-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+}
+
+/* ===== Animations ===== */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
+@media(max-width: 500px){
+  .profile-card {
+    padding: 24px;
+  }
+  .birth-age-row {
+    grid-template-columns: 2fr 1fr;
+  }
+}

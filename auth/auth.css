@@ -1,0 +1,139 @@
+/* ===== Reset ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== Body ===== */
+body {
+    background: linear-gradient(135deg, #1f2937, #111827);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== Container ===== */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== Card ===== */
+.auth-card {
+    background: #1f2937;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    width: 100%;
+    animation: slideIn 0.5s ease forwards;
+}
+
+.auth-card h2 {
+    color: #3b82f6;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ===== Form Inputs ===== */
+.auth-card label {
+    color: #d1d5db;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    background: #111827;
+    color: #f3f4f6;
+    transition: all 0.3s ease;
+}
+
+.auth-card input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* ===== Buttons ===== */
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #3b82f6;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-btn:hover {
+    background: #60a5fa;
+    transform: translateY(-2px);
+}
+
+/* ===== Error Messages ===== */
+.auth-error {
+    background: #b91c1c;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: none;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ===== Switch Auth Link ===== */
+.switch-auth {
+    text-align: center;
+    margin-top: 12px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.switch-auth a {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.switch-auth a:hover {
+    text-decoration: underline;
+    color: #60a5fa;
+}
+
+/* ===== Animations ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Responsive ===== */
+@media(max-width: 450px){
+    .auth-card{
+        padding: 20px 18px;
+    }
+
+    .auth-btn{
+        font-size: 14px;
+    }
+}

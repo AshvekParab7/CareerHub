@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-card">
+
+      <!-- Header with Back Button -->
+      <div class="profile-header">
+        <button class="back-btn" onclick="window.history.back();">←</button>
+        <h2>Complete Your Profile</h2>
+      </div>
+
+      <!-- Error Message -->
+      <div class="auth-error"></div>
+
+      <!-- Profile Form -->
+      <form id="profileForm">
+        <label for="displayName">Full Name</label>
+        <input type="text" id="displayName" placeholder="Your Name" required />
+
+        <label for="school">School / College</label>
+        <input type="text" id="school" placeholder="Your Institution" required />
+
+        <label for="stream">Stream / Field of Study</label>
+        <input type="text" id="stream" placeholder="Your Stream" required />
+
+        <!-- Birthdate + Age (aligned) -->
+        <div class="birth-age-row">
+          <div class="field birth-field">
+            <label for="birthdate">Birthdate</label>
+            <input type="date" id="birthdate" required />
+          </div>
+
+          <div class="field age-field">
+            <label class="age-label">Age</label>
+            <div class="age-box">
+              <span id="age">--</span> yrs
+            </div>
+          </div>
+        </div>
+
+        <label for="favSubjects">Favorite Subjects</label>
+        <input type="text" id="favSubjects" placeholder="Math, Science, ..." />
+
+        <label for="interests">Other Interests</label>
+        <input type="text" id="interests" placeholder="Programming, Music, ..." />
+
+        <button type="submit" class="save-btn">Save Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // ===== Initialize Firebase =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyC3KQNjFRHNtUKFWicvI30BQD6fHXKcJFg",
+  authDomain: "sara-740ac.firebaseapp.com",
+  projectId: "sara-740ac",
+  storageBucket: "sara-740ac.firebasestorage.app",
+  messagingSenderId: "277140567536",
+  appId: "1:277140567536:web:ab0e8e1e4b46be9fae5935",
+  measurementId: "G-4TWFQ64EJ3"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ===== Real-time Age Calculation =====
+    const birthInput = document.getElementById('birthdate');
+    const ageDisplay = document.getElementById('age');
+
+    function calculateAge(birthdate) {
+      if (!birthdate) return "--";
+      const birth = new Date(birthdate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    birthInput.addEventListener('change', () => {
+      ageDisplay.textContent = calculateAge(birthInput.value);
+    });
+
+    // ===== Load & Save Profile =====
+    auth.onAuthStateChanged(user => {
+      if (!user) return;
+
+      const userDoc = db.collection("users").doc(user.uid);
+
+      // Load existing data
+      userDoc.get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.displayName) document.getElementById('displayName').value = data.displayName;
+          if (data.school) document.getElementById('school').value = data.school;
+          if (data.stream) document.getElementById('stream').value = data.stream;
+          if (data.birthdate) {
+            document.getElementById('birthdate').value = data.birthdate;
+            ageDisplay.textContent = calculateAge(data.birthdate);
+          }
+          if (data.favSubjects) document.getElementById('favSubjects').value = data.favSubjects;
+          if (data.interests) document.getElementById('interests').value = data.interests;
+        }
+      });
+
+      // Save form data
+      const profileForm = document.getElementById('profileForm');
+      profileForm.addEventListener('submit', e => {
+  e.preventDefault(); // stop default form submission
+
+  const formData = {
+    displayName: document.getElementById('displayName').value,
+    school: document.getElementById('school').value,
+    stream: document.getElementById('stream').value,
+    birthdate: document.getElementById('birthdate').value,
+    favSubjects: document.getElementById('favSubjects').value,
+    interests: document.getElementById('interests').value
+  };
+
+  // Save to Firebase
+  db.collection("users").doc(auth.currentUser.uid).set(formData, { merge: true })
+    .then(() => {
+      alert('Profile saved!');
+      window.location.href = '../index.html'; // redirect to index
+    })
+    .catch(err => console.error(err));
+});
+
+    });
+    
+  </script>
+</body>
+</html>
